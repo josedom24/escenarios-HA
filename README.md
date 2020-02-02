@@ -32,3 +32,4 @@ Para poder desplegar los diferentes clústeres, basta con acceder a cada directo
 ## Escenarios
 
 * [Balanceo por DNS](01-Balanceo-DNS)
+* [Balanceo por DNS con nombre virtuales](02-Balanceo-DNS-Nombres-Virtuales)
