@@ -28,3 +28,7 @@ Para poder desplegar los diferentes clústeres, basta con acceder a cada directo
     $ vagrant up
     $ cd ansible
     $ ansible-playbook -b site.yaml
+    
+## Escenarios
+
+* [Balanceo por DNS](01-Balanceo-DNS)
