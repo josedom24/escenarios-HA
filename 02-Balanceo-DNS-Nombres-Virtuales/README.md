@@ -9,9 +9,9 @@ Un solucón es considerar el nombre del servicio `www.example.com` como un nombr
 Como hemos dicho la en la zona de resolución directa indicaremos que el nombre que queremos balancear `www.example.com` es un alias de un nombre de un subdominio delegado: `www.http.example.com`, e indicamos que los servidores con autoridad para este subdominio serán `nodo1` y nodo2`:
 
     ...
-    www         IN  CNAME   www.http
-    http        IN  NS      nodo1
-    http	    IN  NS      nodo2
+    www     IN  CNAME   www.http
+    http    IN  NS      nodo1
+    http    IN  NS      nodo2
 
 ## Configuración de los servidores DNS delegados
 
@@ -58,5 +58,5 @@ Añadimos la dirección IP como servidor DNS primario la dirección `10.1.1.103`
     nodo2
     ...
 
-**En esta ocasión si paramos un servidor las resoluciones siempre nos devolverán la ip del otro servidor**
+**En esta ocasión si paramos un servidor las resoluciones siempre nos devolverán la ip del otro servidor.**
 
