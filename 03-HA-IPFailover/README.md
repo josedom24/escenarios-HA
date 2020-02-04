@@ -99,7 +99,7 @@ Si comprobamos la interface `eth1` del `nodo1` lo podemos comprobar:
 * Edita el fichero `/etc/resolv.conf` de tu equipo y añade como servidor DNS primario el nodo "dns" que tiene la dirección IP `10.1.1.103`
 * Comprueba la conectividad con los nodos del cluster con ping Utiliza dig para resolver el nombre `www.example.com`:
 
-    $ dig @10.1.1.103 www.example.com
+        $ dig @10.1.1.103 www.example.com
 
 * Comprueba que la dirección `www.example.com` está asociada a la dirección IP `10.1.1.100`, que en este escenario es la IP virtual que estará asociada en todo momento al nodo que esté en modo maestro.
 * Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que el recurso
@@ -107,30 +107,31 @@ IPCluster está funcionando correctamente en uno de ellos.
 * Haz ping a `www.example.com` desde la máquina anfitriona y comprueba la tabla arp. Podrás verificar que la dirección MAC asociada a la dirección IP `10.1.1.100` coincide con la del nodo maestro en estos momentos.
 * Para el nodo maestro (supongamos que es `nodo1`):
 
-    $ vagrant halt node2
+        $ vagrant halt node2
 
 * Haz ping a `www.example.com` y comprueba que la tabla arp ha cambiado. Ahora la dirección MAC asociada a la dirección IP `10.1.1.100` es la del otro nodo.
 * Entra en el nodo maestro y comprueba el estado del clúster con `pcs status`.
 * Levanta de nuevo el nodo que estaba parado. Los recursos no van a volver a él porque en la configuración se ha penalizado el movimiento de los recursos, estos tienden a quedarse en el nodo en el que se están ejecutando, no a volver al nodo que era maestro
 * Si queremos que cuando un nodo este levantado el recurso se asigne a este nodo tenemos que crear una restricción de localización de afinidad, por ejemplo cuando el nodo1 este levantado se le asigna el recurso indicamos los siguiente:
 
-    pcs constraint location VirtualIP prefers nodo1=INFINITY
+        pcs constraint location VirtualIP prefers nodo1=INFINITY
 
 * Podmos ver las restricciones que tenemos asignadas:
 
-    pcs constraint show
-    Location Constraints:
-      Resource: VirtualIP
-        Enabled on: nodo1 (score:INFINITY)
-    Ordering Constraints:
-    Colocation Constraints:
-    Ticket Constraints:
+        pcs constraint show
+        
+        Location Constraints:
+          Resource: VirtualIP
+            Enabled on: nodo1 (score:INFINITY)
+        Ordering Constraints:
+        Colocation Constraints:
+        Ticket Constraints:
 
 * Vuelve a apacgar el `nodo1` comprueba que el recurso se asigna al `nodo2`, vuelve a encender el `nodo1` y comprueba que por la restricción de localización el recurso vuelve a `nodo1`.
 
 * Para eleminar la restricción ejecutamos:
 
-    pcs constraint rm location-VirtualIP-pcmk-1-INFINITY
+        pcs constraint rm location-VirtualIP-pcmk-1-INFINITY
 
 * Por último accede desde un navegador web a `www.example.com` comprueba al nodo al que esta accediendo, para ese nodo y comprueba que se accede al otro nodo.
 
