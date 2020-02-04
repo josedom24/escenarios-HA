@@ -9,7 +9,7 @@ Vamos a utilizar la misma configuración de equipos que en el primer ejercicio, 
 * `nodo1`: `10.1.1.101` <- Servidor web
 * `nodo2`: `10.1.1.102` <- Servidor web
 * `dns`: `10.1.1.103` <- Servidor DNS
-* `www.example.com`: 10.1.1.100
+* `www.example.com`: `10.1.1.100`
 
 ## Levantar el escenario
 
