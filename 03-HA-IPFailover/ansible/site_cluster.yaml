@@ -1,0 +1,4 @@
+- hosts: nodos
+  become: true
+  roles:
+   - role: pacemaker
