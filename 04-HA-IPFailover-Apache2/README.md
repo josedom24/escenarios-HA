@@ -50,7 +50,7 @@ Por lo una vez terminada la instalación nos encontramos el siguiente estado en 
 
 ## Asegurar que los recursos se ejecutan en el mismo nodo
 
-Como vemos cada recurso se ha levantado en un nodo. (**Comprueba que en el nodo1 tiene la IP virtual, y en el nodo2 existen los procesos de apache2).
+Como vemos cada recurso se ha levantado en un nodo. (**Comprueba que en el nodo1 tiene la IP virtual, y en el nodo2 existen los procesos de apache2**).
 
 Por defecto corosync intenta distribuir los distintos recursos entre los nodos del cluster, pero en ocasiones (como es el caso de nuestro ejemplo) es necesario que los dos recursos se asignen a un mismo nodo. En nuestro caso el recurso `WebSite` sólo puede ejecutarse en el nodo donde tiene asignado el recurso `VirtualIP`. Para ello vamos a crear una restricción de colocación:
 
