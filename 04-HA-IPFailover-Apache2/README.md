@@ -1,4 +1,4 @@
-# HA Ip Failover + Apache2
+# HA con pacemaker y corosync. IP Failover + Apache2
 
 Partiendo del ejercicio de IP Failover, vamos a agregar el recurso apache al sistema de gestión del cluster. De esta forma el clúster controlará que el servicio esté siempre operativo en el nodo maestro, además como tenemos asociada la dirección `www.example.com` a la IP virtual `10.1.1.100`, accederemos siempre al servidor web del nodo maestro al poner en el navegador la dirección `www.example.com`
 

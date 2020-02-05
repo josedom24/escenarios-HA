@@ -1,4 +1,4 @@
-# HA Ip Failover
+# HA con pacemaker y corosync. IP Failover
 
 El caso más sencillo de cluster de alta disponibilidad es utilizar dos nodos que funcionen en modo maestro esclavo y que ofrezcan como recurso de alta disponibilidad una dirección IP, que se denomina en algunos casos IP virtual.
 
