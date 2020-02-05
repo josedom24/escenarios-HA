@@ -1,0 +1,6 @@
+[nodos]
+nodo1 ansible_ssh_host=10.1.1.101 ansible_ssh_private_key_file="../.vagrant/machines/nodo1/virtualbox/private_key"
+nodo2 ansible_ssh_host=10.1.1.102 ansible_ssh_private_key_file="../.vagrant/machines/nodo2/virtualbox/private_key"
+
+[servidor_dns]
+dns ansible_ssh_host=10.1.1.103 ansible_ssh_private_key_file="../.vagrant/machines/dns/virtualbox/private_key"
