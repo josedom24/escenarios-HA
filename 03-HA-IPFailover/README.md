@@ -104,7 +104,7 @@ Si comprobamos la interface `eth1` del `nodo1` lo podemos comprobar:
 
 * Comprueba que la dirección `www.example.com` está asociada a la dirección IP `10.1.1.100`, que en este escenario es la IP virtual que estará asociada en todo momento al nodo que esté en modo maestro.
 * Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que el recurso
-IPCluster está funcionando correctamente en uno de ellos.
+VirtualIP está funcionando correctamente en uno de ellos.
 * Haz ping a `www.example.com` desde la máquina anfitriona y comprueba la tabla arp. Podrás verificar que la dirección MAC asociada a la dirección IP `10.1.1.100` coincide con la del nodo maestro en estos momentos.
 * Para el nodo maestro (supongamos que es `nodo1`):
 
@@ -112,7 +112,7 @@ IPCluster está funcionando correctamente en uno de ellos.
 
 * Haz ping a `www.example.com` y comprueba que la tabla arp ha cambiado. Ahora la dirección MAC asociada a la dirección IP `10.1.1.100` es la del otro nodo.
 * Entra en el nodo maestro y comprueba el estado del clúster con `pcs status`.
-* Levanta de nuevo el nodo que estaba parado. Los recursos no van a volver a él porque en la configuración se ha penalizado el movimiento de los recursos, estos tienden a quedarse en el nodo en el que se están ejecutando, no a volver al nodo que era maestro
+* Levanta de nuevo el nodo que estaba parado. Los recursos no van a volver a él porque en la configuración se ha penalizado el movimiento de los recursos, estos tienden a quedarse en el nodo en el que se están ejecutando, no a volver al nodo que era maestro.
 * Si queremos que cuando un nodo este levantado el recurso se asigne a este nodo tenemos que crear una restricción de localización de afinidad, por ejemplo cuando el nodo1 este levantado se le asigna el recurso indicamos los siguiente:
 
         pcs constraint location VirtualIP prefers nodo1=INFINITY

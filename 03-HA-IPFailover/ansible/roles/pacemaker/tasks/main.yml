@@ -4,7 +4,7 @@
     - pacemaker
     - pcs
 
-- name: Change paswword to user hacluster
+- name: Change password to user hacluster
   user:
       name: hacluster
       password: "{{ 'hacluster' | password_hash('sha512') }}"
