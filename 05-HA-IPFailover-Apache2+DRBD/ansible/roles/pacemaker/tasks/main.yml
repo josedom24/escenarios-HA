@@ -1,0 +1,31 @@
+- name: install pacemaker, pcs
+  apt: 
+    pkg:
+    - pacemaker
+    - pcs
+
+- name: Change password to user hacluster
+  user:
+      name: hacluster
+      password: "{{ 'hacluster' | password_hash('sha512') }}"
+
+- name: Copy /etc/hosts
+  copy: >
+    src=etc/hosts
+    dest=/etc/hosts
+    mode=644
+    owner=root
+    group=root
+
+
+- name: Copy script init_cluster.sh
+  copy: >
+    src=init_cluster.sh
+    dest=/root/init_cluster.sh
+    mode=644
+    owner=root
+    group=root
+
+- name: Create the cluster
+  command: sh /root/init_cluster.sh
+  when: ansible_hostname == 'nodo1'
