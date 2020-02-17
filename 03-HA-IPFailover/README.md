@@ -38,6 +38,9 @@ Los nodos del cluster deben ser conocidos por el resto de nodos, por la tanto en
     10.1.1.101    nodo1
     10.1.1.102    nodo2
 
+**Asegurate que no hay ninguna línea en `etc/hosts` que referencie a `nodo1` o `nodo2` distintas de estas.**
+
+
 Las instrucciones que vienen a continuación se realizan en un solo nodo del cluster, por ejemplo en el `nodo1`. 
 Durante la instalación del sistema ya se ha creado un cluster, por lo que lo primero es eliminar el cluster actual:
 
