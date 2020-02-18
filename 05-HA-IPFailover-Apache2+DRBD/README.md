@@ -1,4 +1,5 @@
 # HA con pacemaker y corosync. IP Failover + Apache2 + RDBD
+https://www.tecmint.com/setup-drbd-storage-replication-on-centos-7/
 
     apt install drbd-utils
   
