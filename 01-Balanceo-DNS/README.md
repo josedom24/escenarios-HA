@@ -33,10 +33,7 @@ También puede verse de forma mucho más clara a través del navegador, para lo 
 
 Otra prueba que podemos hacer es:
 
-    while
-    do
-        curl http://www.example.com/info.txt
-    done
+    while [ True ]; do curl http://www.example.com/info.txt && sleep 1 ; done
 
     nodo1
     nodo2

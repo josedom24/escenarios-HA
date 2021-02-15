@@ -49,10 +49,7 @@ Aunque la respuesta no cambia mucho, podemos obtener las direcciones de los dos 
 
 Añadimos la dirección IP como servidor DNS primario la dirección `10.1.1.103` y podemos probar:
 
-    while
-    do
-        curl http://www.example.com/info.txt
-    done
+    while [ True ]; do curl http://www.example.com/info.txt && sleep 1 ; done
 
     nodo1
     nodo2
