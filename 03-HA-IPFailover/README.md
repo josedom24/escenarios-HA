@@ -58,7 +58,7 @@ Para asegurar que los datos del cluster no se puedan corromper la propiedad `sto
 
     pcs property set stonith-enabled=false
 
-Por último vamos a crear un recurso del tipo `ocf:heartbeat:IPaddr2`que nos permite que el cluster gestione una ipv4 que se asignará a la interface `eth1``de uno de los nodos. Si el nodo que tiene asignado el recurso no funciona, automáticamente se asignará al otro nodo.
+Por último vamos a crear un recurso del tipo `ocf:heartbeat:IPaddr2`que nos permite que el cluster gestione una ipv4 que se asignará a la interface `eth1` de uno de los nodos. Si el nodo que tiene asignado el recurso no funciona, automáticamente se asignará al otro nodo.
 
     pcs resource create VirtualIP ocf:heartbeat:IPaddr2 ip=10.1.1.100 cidr_netmask=32 nic=eth1 op monitor interval=30s
 
@@ -111,7 +111,7 @@ VirtualIP está funcionando correctamente en uno de ellos.
 * Haz ping a `www.example.com` desde la máquina anfitriona y comprueba la tabla arp. Podrás verificar que la dirección MAC asociada a la dirección IP `10.1.1.100` coincide con la del nodo maestro en estos momentos.
 * Para el nodo maestro (supongamos que es `nodo1`):
 
-        $ vagrant halt node2
+        $ vagrant halt nodo1
 
 * Haz ping a `www.example.com` y comprueba que la tabla arp ha cambiado. Ahora la dirección MAC asociada a la dirección IP `10.1.1.100` es la del otro nodo.
 * Entra en el nodo maestro y comprueba el estado del clúster con `pcs status`.
@@ -120,7 +120,7 @@ VirtualIP está funcionando correctamente en uno de ellos.
 
         pcs constraint location VirtualIP prefers nodo1=INFINITY
 
-* Podmos ver las restricciones que tenemos asignadas:
+* Podemos ver las restricciones que tenemos asignadas:
 
         pcs constraint show
         
@@ -131,9 +131,9 @@ VirtualIP está funcionando correctamente en uno de ellos.
         Colocation Constraints:
         Ticket Constraints:
 
-* Vuelve a apacgar el `nodo1` comprueba que el recurso se asigna al `nodo2`, vuelve a encender el `nodo1` y comprueba que por la restricción de localización el recurso vuelve a `nodo1`.
+* Vuelve a apagar el `nodo1` comprueba que el recurso se asigna al `nodo2`, vuelve a encender el `nodo1` y comprueba que por la restricción de localización el recurso vuelve a `nodo1`.
 
-* Para eleminar la restricción ejecutamos:
+* Para eliminar la restricción ejecutamos:
 
         pcs constraint rm location-VirtualIP-pcmk-1-INFINITY
 
