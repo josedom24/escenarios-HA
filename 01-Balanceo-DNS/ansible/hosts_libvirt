@@ -1,0 +1,6 @@
+[nodos]
+nodo1 ansible_ssh_host=10.1.1.101 ansible_ssh_private_key_file="../.vagrant/machines/nodo1/libvirt/private_key" ansible_python_interpreter=/usr/bin/python3
+nodo2 ansible_ssh_host=10.1.1.102 ansible_ssh_private_key_file="../.vagrant/machines/nodo2/libvirt/private_key" ansible_python_interpreter=/usr/bin/python3
+
+[servidor_dns]
+dns ansible_ssh_host=10.1.1.103 ansible_ssh_private_key_file="../.vagrant/machines/dns/libvirt/private_key" ansible_python_interpreter=/usr/bin/python3

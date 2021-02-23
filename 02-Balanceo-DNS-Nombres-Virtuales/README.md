@@ -37,7 +37,12 @@ Simplemente ejecutamos la instrucción:
     $ cd ansible
     $ ansible-playbook -b site.yaml
 
-Que levanta y configura la red en los tres nodos y configurar el escenario
+Que levanta y configura la red en los tres nodos y configurar el escenario.
+
+**Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
+
+    inventory = hosts_libvirt
+
 
 ## Prueba de funcionamiento
 
@@ -49,10 +54,7 @@ Aunque la respuesta no cambia mucho, podemos obtener las direcciones de los dos 
 
 Añadimos la dirección IP como servidor DNS primario la dirección `10.1.1.103` y podemos probar:
 
-    while
-    do
-        curl http://www.example.com/info.txt
-    done
+    while [ True ]; do curl http://www.example.com/info.txt && sleep 1 ; done
 
     nodo1
     nodo2
