@@ -149,11 +149,7 @@ Una vez terminada la configuración vemos el estado del cluster:
          Slaves: [ nodo2 ]
      WebFS	(ocf::heartbeat:Filesystem):	Started nodo1
 
-  
-<<<<<<< HEAD
-  
-  
-=======
+ 
 ## Prueba de funcionamiento
 
 * Edita el fichero `/etc/resolv.conf` de tu equipo y añade como servidor DNS primario el nodo "dns" que tiene la dirección IP `10.1.1.103`
@@ -165,4 +161,3 @@ Una vez terminada la configuración vemos el estado del cluster:
 * Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que los recursos IPCluster, WebSite, WebData y WebFS están funcionando correctamente en uno de ellos. En esta configuración se ha forzado que todos los recursos se ejecuten siempre en un solo nodo, que será el maestro de todos los recursos.
 * Utiliza el navegador y accede a la dirección `www.example.com`. Recarga la página y comprueba que siempre responde el mismo nodo (nodo maestro).
 * Apaga el nodo maestro y comprueba que los recursos pasan al otro nodo2 y que la página sigue funcionando.
->>>>>>> 76715aed4e3eed3e6957187f1040b9323ae07969
