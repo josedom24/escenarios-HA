@@ -15,6 +15,11 @@ Simplemente ejecutamos la instrucción:
     $ cd ansible
     $ ansible-playbook -b site.yaml
 
+**Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
+
+    inventory = hosts_libvirt
+
+
 ## Configuración de DRBD
 
 Con la ejecución de la receta ansible hemos creado un cluster entre los dos nodos con dos recursos: 

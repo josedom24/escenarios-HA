@@ -21,6 +21,11 @@ Simplemente ejecutamos la instrucción:
 
 Que levanta y configura la red en los tres nodos y configurar el escenario sin el cluster creado.
 
+**Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
+
+    inventory = hosts_libvirt
+
+
 ## Creación del cluster manualmente
 
 En primer lugar vamos a hacer la configuración del cluster manualmente. Vamos a usar `pacemaker` donde vamos a crear los recursos del cluster, `corosync` que es el encargado de que los recursos del clustere estén funcionando siempre en algún nodo y `pcs` que es la utilidad para gestionar el cluster.

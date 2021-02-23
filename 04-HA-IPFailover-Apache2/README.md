@@ -15,7 +15,13 @@ Simplemente ejecutamos la instrucción:
     $ cd ansible
     $ ansible-playbook -b site.yaml
 
-Que levanta y configura la red en los tres nodos y configurar el escenario sin el cluster creado. En este escenario el fichero `init_cluster.sh` que ejecutamos en el cluster crea un nuevo recurso:
+Que levanta y configura la red en los tres nodos y configurar el escenario sin el cluster creado. 
+
+**Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
+
+    inventory = hosts_libvirt
+
+En este escenario el fichero `init_cluster.sh` que ejecutamos en el cluster crea un nuevo recurso:
 
     pcs resource create WebSite ocf:heartbeat:apache  \
       configfile=/etc/apache2/apache2.conf \

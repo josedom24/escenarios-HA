@@ -19,6 +19,7 @@ Simplemente ejecutamos la instrucción:
 Que levanta y configura la red en los tres nodos y configurar el escenario.
 
 **Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
+
     inventory = hosts_libvirt
 
 
