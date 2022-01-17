@@ -1,6 +1,6 @@
 # Escenarios Alta Disponibilidad
 
-Escenarios para ejemplos de cluster de alta disponibilidad para la asignatura de Seguridad Informática en el ciclo de grado superior de Administración de Sistemas Informáticos. Basada en el repositorio:  [https://github.com/albertomolina/Escenarios-HA](https://github.com/albertomolina/Escenarios-HA).
+Escenarios para ejemplos de cluster de alta disponibilidad. Basada en el repositorio:  [https://github.com/albertomolina/Escenarios-HA](https://github.com/albertomolina/Escenarios-HA).
 
 ## Instalación de vagrant y ansible
 
@@ -21,7 +21,7 @@ O usando un entorno virtual:
 
 ## Construcción de los escenarios
 
-Cada directorio contiene todos los ficheros necesarios para montar algún tipo de escenario de alta disponibilidad o balanceo de carga de forma sencilla y automática.
+Cada directorio contiene todos los ficheros necesarios para montar algún tipo de escenario de alta disponibilidad o balanceo de carga de forma sencilla y automática. Los escenarios se levantan sobre KVM utilizando el plugin de vagrant [libvirt-vagrant](https://github.com/vagrant-libvirt/vagrant-libvirt).
 
 Para poder desplegar los diferentes clústeres, basta con acceder a cada directorio y ejecutar las siguientes instrucciones:
 
