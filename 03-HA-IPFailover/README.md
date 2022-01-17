@@ -4,7 +4,7 @@ El caso más sencillo de cluster de alta disponibilidad es utilizar dos nodos qu
 
 Cada nodo del clúster posee su propia dirección IP y uno de ellos posee además la dirección IP virtual. El software de alta disponibilidad está monitorizando ambos nodos en todo momento y en el caso de que el nodo que ofrece el recurso tenga algún problema, el recurso (la dirección IP en este caso) pasa al nodo que esté en modo esclavo.
 
-Vamos a utilizar la misma configuración de equipos que en el primer ejercicio, salvo que en esta ocasión utilizaremos la dirección IP 10.1.1.100 como IP virtual asociada a www.example.com
+Vamos a utilizar la misma configuración de equipos que en el primer ejercicio, salvo que en esta ocasión utilizaremos la dirección IP 10.1.1.100 como IP virtual asociada a `www.example.com`.
 
 * `nodo1`: `10.1.1.101` <- Servidor web
 * `nodo2`: `10.1.1.102` <- Servidor web
@@ -17,24 +17,19 @@ Simplemente ejecutamos la instrucción:
 
     $ vagrant up
     $ cd ansible
-    $ ansible-playbook -b site.yaml
+    $ ansible-playbook site.yaml
 
 Que levanta y configura la red en los tres nodos y configurar el escenario sin el cluster creado.
 
-**Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
-
-    inventory = hosts_libvirt
-
-
 ## Creación del cluster manualmente
 
-En primer lugar vamos a hacer la configuración del cluster manualmente. Vamos a usar `pacemaker` donde vamos a crear los recursos del cluster, `corosync` que es el encargado de que los recursos del clustere estén funcionando siempre en algún nodo y `pcs` que es la utilidad para gestionar el cluster.
+En primer lugar vamos a hacer la configuración del cluster manualmente. Vamos a usar `pacemaker` donde vamos a crear los recursos del cluster, `corosync` que es el encargado de que los recursos del cluster estén funcionando siempre en algún nodo y `pcs` que es la utilidad para gestionar el cluster.
 
-Lo primero que hacemos es instalar los paquetes:
+Lo primero que hacemos es instalar los paquetes en los dos nodos:
 
     apt install pacemaker pcs
 
-A continuación cambiamos en los dos nodos la contraseña del usuario `hacluster` (para este ejemplo ponemos como contrasña `hacluster`):
+A continuación cambiamos en los dos nodos la contraseña del usuario `hacluster` (para este ejemplo ponemos como contraseña `hacluster`):
 
     passwd hacluster
 
@@ -71,7 +66,6 @@ Comprobamos el estado del cluster:
 
     pcs status
 
-    pcs status
     Cluster name: mycluster
     Stack: corosync
     Current DC: nodo1 (version 2.0.1-9e909a5bdd) - partition with quorum
@@ -148,4 +142,4 @@ VirtualIP está funcionando correctamente en uno de ellos.
 
 He creado otro playbook para crear el cluster desde ansible, para ello simplemente:
 
-    $ ansible-playbook -b site_cluster.yaml
+    $ ansible-playbook site_cluster.yaml
