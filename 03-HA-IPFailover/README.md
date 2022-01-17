@@ -107,7 +107,7 @@ Si comprobamos la interface `eth1` del `nodo1` lo podemos comprobar:
 * Comprueba que la dirección `www.example.com` está asociada a la dirección IP `10.1.1.100`, que en este escenario es la IP virtual que estará asociada en todo momento al nodo que esté en modo maestro.
 * Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que el recurso
 VirtualIP está funcionando correctamente en uno de ellos.
-* Haz ping a `www.example.com` desde la máquina anfitriona y comprueba la tabla arp. Podrás verificar que la dirección MAC asociada a la dirección IP `10.1.1.100` coincide con la del nodo maestro en estos momentos.
+* Haz ping a `www.example.com` desde la máquina anfitriona y comprueba la tabla arp (`ip neigh`). Podrás verificar que la dirección MAC asociada a la dirección IP `10.1.1.100` coincide con la del nodo maestro en estos momentos.
 * Para el nodo maestro (supongamos que es `nodo1`):
 
         $ vagrant halt nodo1
