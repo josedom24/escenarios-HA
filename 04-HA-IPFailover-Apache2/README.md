@@ -1,6 +1,6 @@
 # HA con pacemaker y corosync. IP Failover + Apache2
 
-Partiendo del ejercicio de IP Failover, vamos a agregar el recurso apache al sistema de gestión del cluster. De esta forma el clúster controlará que el servicio esté siempre operativo en el nodo maestro, además como tenemos asociada la dirección `www.example.com` a la IP virtual `10.1.1.100`, accederemos siempre al servidor web del nodo maestro al poner en el navegador la dirección `www.example.com`
+Partiendo del ejercicio de IP Failover, vamos a agregar el recurso apache al sistema de gestión del cluster. De esta forma el clúster controlará que el servicio esté siempre operativo en el nodo maestro, además como tenemos asociada la dirección `www.example.com` a la IP virtual `10.1.1.100`, accederemos siempre al servidor web del nodo maestro al poner en el navegador la dirección `www.example.com`.
 
 * `nodo1`: `10.1.1.101` <- Servidor web
 * `nodo2`: `10.1.1.102` <- Servidor web
@@ -13,13 +13,9 @@ Simplemente ejecutamos la instrucción:
 
     $ vagrant up
     $ cd ansible
-    $ ansible-playbook -b site.yaml
+    $ ansible-playbook site.yaml
 
 Que levanta y configura la red en los tres nodos y configurar el escenario sin el cluster creado. 
-
-**Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
-
-    inventory = hosts_libvirt
 
 En este escenario el fichero `init_cluster.sh` que ejecutamos en el cluster crea un nuevo recurso:
 
@@ -97,12 +93,12 @@ Para asegurarnos de que nuestro sitio web responda independientemente de la conf
 ## Prueba de funcionamiento
 
 * Edita el fichero `/etc/resolv.conf` de tu equipo y añade como servidor DNS primario el nodo "dns" que tiene la dirección IP `10.1.1.103`
-* Comprueba la conectividad con los nodos del cluster con ping Utiliza dig para resolver el nombre `www.example.com`:
+* Comprueba la conectividad con los nodos del cluster con `ping`. Utiliza `dig` para resolver el nombre `www.example.com`:
 
         $ dig @10.1.1.103 www.example.com
 
 * Comprueba que la dirección `www.example.com` está asociada a la dirección IP `10.1.1.100`, que en este escenario es la IP virtual que estará asociada en todo momento al nodo que esté en modo maestro.
-* Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que los recursos VirtualIP y WebSite están funcionando correctamente en uno de ellos. En esta configuración se ha forzado que todos los recursos se ejecuten siempre en un solo nodo, que será el maestro de todos los recursos.
+* Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que los recursos `VirtualIP` y `WebSite` están funcionando correctamente en uno de ellos. En esta configuración se ha forzado que todos los recursos se ejecuten siempre en un solo nodo, que será el maestro de todos los recursos.
 * Utiliza el navegador y accede a la dirección `www.example.com`. Recarga la página y comprueba que siempre responde el mismo nodo (nodo maestro).
 * Entra en el nodo maestro por ssh y para el servicio apache. Comprueba que transcurridos unos instantes el servicio vuelve a estar levantado en ese nodo (corosync se encarga de volver a levantarlo). ¿Qué diferencias encuentras entre esta configuración y la del ejercicio de balanceo DNS?
 * Para el nodo maestro con vagrant y comprueba el estado del clúster con `pcs status` en el otro nodo. Verifica que es posible acceder con el navegador al sitio `www.example.com`, pero que ahora el contenido lo sirve el otro nodo. **¿Piensas que esta configuración es suficiente para ejecutar contenido web dinámico?**
