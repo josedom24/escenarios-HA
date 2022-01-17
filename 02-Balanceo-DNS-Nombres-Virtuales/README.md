@@ -2,7 +2,7 @@
 
 En el escenario anterior vimos que si un servidor web deja de funcionar, cuando se balancee la carga hacía el por medio del dns no podremos conectar.
 
-Un solucón es considerar el nombre del servicio `www.example.com` como un nombre virtual, es decir será un alias (CNAME) de un nombre de un subdominio que estará delegado en dos servidores dns que instalaremos en los servidores que ofrecen el servicio (en nuestro caso en los servidores web).
+Un solución es considerar el nombre del servicio `www.example.com` como un nombre virtual, es decir será un alias (CNAME) de un nombre de un subdominio que estará delegado en dos servidores dns que instalaremos en los servidores que ofrecen el servicio (en nuestro caso en los servidores web).
 
 ## Configuración de bind9
 
@@ -35,14 +35,9 @@ Simplemente ejecutamos la instrucción:
 
     $ vagrant up
     $ cd ansible
-    $ ansible-playbook -b site.yaml
+    $ ansible-playbook site.yaml
 
 Que levanta y configura la red en los tres nodos y configurar el escenario.
-
-**Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
-
-    inventory = hosts_libvirt
-
 
 ## Prueba de funcionamiento
 
