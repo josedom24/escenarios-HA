@@ -13,12 +13,7 @@ Simplemente ejecutamos la instrucción:
 
     $ vagrant up
     $ cd ansible
-    $ ansible-playbook -b site.yaml
-
-**Nota: Si utilizas vagrant con libvirt** tienes que utilizar el inventario `host_libvirt`, para ello, modifica el fichero `ansible.cfg` y modifica la línea:
-
-    inventory = hosts_libvirt
-
+    $ ansible-playbook site.yaml
 
 ## Configuración de DRBD
 
@@ -34,7 +29,7 @@ Con la ejecución de la receta ansible hemos creado un cluster entre los dos nod
      WebSite	(ocf::heartbeat:apache):	Started nodo1
     ...
 
-Podemos comprobar que en el fichero `Vagrantfile` hemos añadido un disco al nodo1 y nodo2, estos discos los vamos a utilizar para crear nuestro dispositivo de bloque DRBD (**Nota: Si estás usando libvirt los dispositivo de bloque se llaman `vdb`**), para ello lo primero que hacemos es instalar los paquetes necesarios en los dos nodos:
+Podemos comprobar que en el fichero `Vagrantfile` hemos añadido un disco al nodo1 y nodo2, estos discos los vamos a utilizar para crear nuestro dispositivo de bloque DRBD, para ello lo primero que hacemos es instalar los paquetes necesarios en los dos nodos:
 
     # apt install drbd-utils
 
@@ -51,11 +46,11 @@ A continuación vamos a crear un recurso DRBD, creando el fichero `wwwdata.res` 
       allow-two-primaries;
      }
      on nodo1 {
-      disk   /dev/sdb;
+      disk   /dev/vdb;
       address  10.1.1.101:7789;
      }
      on nodo2 {
-      disk   /dev/sdb;
+      disk   /dev/vdb;
       address  10.1.1.102:7789;
      }
     }
@@ -153,11 +148,11 @@ Una vez terminada la configuración vemos el estado del cluster:
 ## Prueba de funcionamiento
 
 * Edita el fichero `/etc/resolv.conf` de tu equipo y añade como servidor DNS primario el nodo "dns" que tiene la dirección IP `10.1.1.103`
-* Comprueba la conectividad con los nodos del cluster con ping Utiliza dig para resolver el nombre `www.example.com`:
+* Comprueba la conectividad con los nodos del cluster con `ping`. Utiliza `dig` para resolver el nombre `www.example.com`:
 
         $ dig @10.1.1.103 www.example.com
 
 * Comprueba que la dirección `www.example.com` está asociada a la dirección IP `10.1.1.100`, que en este escenario es la IP virtual que estará asociada en todo momento al nodo que esté en modo maestro.
-* Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que los recursos IPCluster, WebSite, WebData y WebFS están funcionando correctamente en uno de ellos. En esta configuración se ha forzado que todos los recursos se ejecuten siempre en un solo nodo, que será el maestro de todos los recursos.
+* Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que los recursos `IPCluster`, `WebSite`, `WebData` y `WebFS` están funcionando correctamente en uno de ellos. En esta configuración se ha forzado que todos los recursos se ejecuten siempre en un solo nodo, que será el maestro de todos los recursos.
 * Utiliza el navegador y accede a la dirección `www.example.com`. Recarga la página y comprueba que siempre responde el mismo nodo (nodo maestro).
 * Apaga el nodo maestro y comprueba que los recursos pasan al otro nodo2 y que la página sigue funcionando.
