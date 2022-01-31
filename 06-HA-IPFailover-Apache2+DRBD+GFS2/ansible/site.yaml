@@ -1,21 +1,21 @@
-#- hosts: all
-#  become: true
-#  roles:
-#   - role: commons
-#- hosts: servidor_dns
-#  become: true
-#  roles:
-#   - role: bind
-#
-#- hosts: nodos
-#  become: true
-#  roles:
-#   - role: apache2
-#
-#- hosts: nodos
-#  become: true
-#  roles:
-#   - role: pacemaker
+- hosts: all
+  become: true
+  roles:
+   - role: commons
+- hosts: servidor_dns
+  become: true
+  roles:
+   - role: bind
+
+- hosts: nodos
+  become: true
+  roles:
+   - role: apache2
+
+- hosts: nodos
+  become: true
+  roles:
+   - role: pacemaker
 
 - hosts: nodos
   become: true
