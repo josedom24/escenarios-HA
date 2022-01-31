@@ -1,0 +1,43 @@
+- name: install drbd
+  apt: 
+    pkg:
+    - drbd-utils
+
+- name: Copy config drbd
+  copy: src=files/etc/drbd.d/wwwdata.res dest=/etc/drbd.d/wwwdata.res owner=root group=root mode=0644
+  
+- name: Checking DRBD Mirror Devices Creation Status
+  stat:
+    path: "/etc/drbd.d/.drbd1.created"
+  register: _drbd_mirror_device_creation_status
+
+- name: Creating DRBD Mirror Devices
+  command: drbdadm create-md wwwdata
+  register: _drbd_mirror_device_created
+  when: not _drbd_mirror_device_creation_status['stat']['exists']
+
+- name: Marking DRDB Mirror Devices Created
+  file:
+    path: "/etc/drbd.d/.drbd1.created"
+    state: touch
+  when: _drbd_mirror_device_created['changed']
+
+- name: Bringing DRBD Mirror Devices Up
+  command: drbdadm up wwwdata
+  register: _drbd_mirror_device_up
+  when: _drbd_mirror_device_created['changed']
+
+- name: Defining DRBD Primary
+  command: drbdadm primary --force wwwdata
+  register: _drbd_primary
+  when: _drbd_mirror_device_up['changed'] and 
+        ansible_hostname == 'nodo1'
+
+- name: Waiting For DRBD Sync To Complete
+  command: drbdadm status
+  register: _drbd_sync
+  until: ('Inconsistent' not in _drbd_sync['stdout'])
+  retries: 100
+  delay: 30
+  when: _drbd_primary['changed'] and
+        ansible_hostname == 'nodo1'
