@@ -1,8 +1,7 @@
-- name: install drbd and xfs
+- name: install drbd
   apt: 
     pkg:
     - drbd-utils
-    - xfsprogs
 
 - name: Copy config drbd
   copy: src=files/etc/drbd.d/wwwdata.res dest=/etc/drbd.d/wwwdata.res owner=root group=root mode=0644
@@ -40,12 +39,11 @@
   until: ('Inconsistent' not in _drbd_sync['stdout'])
   retries: 100
   delay: 30
-  when: _drbd_primary['changed'] and
-        ansible_hostname == 'nodo1'
 
-- name: Create a xfs filesystem on /dev/drbd1
+
+- name: Create a ext4 filesystem on /dev/drbd1
   community.general.filesystem:
-    fstype: xfs
+    fstype: ext4
     dev: /dev/drbd1
   when: ansible_hostname == 'nodo1'
 
@@ -53,8 +51,8 @@
   ansible.posix.mount:
     path: /mnt
     src: /dev/drbd1
-    fstype: xfs
-    state: present
+    fstype: ext4
+    state: mounted
   when: ansible_hostname == 'nodo1'
 
 - name: Copy index.html
@@ -67,13 +65,13 @@
     state: unmounted
   when: ansible_hostname == 'nodo1'
 
-- name: Copy script update_cluster.sh
-  copy: >
-    src=update_cluster.sh
-    dest=/root/update_cluster.sh
-    mode=644
-    owner=root
-    group=root
-- name: Update the cluster
-  command: sh /root/update_cluster.sh
-  when: ansible_hostname == 'nodo1'
+#- name: Copy script update_cluster.sh
+#  copy: >
+#    src=update_cluster.sh
+#    dest=/root/update_cluster.sh
+#    mode=644
+#    owner=root
+#    group=root
+#- name: Update the cluster
+#  command: sh /root/update_cluster.sh
+#  when: ansible_hostname == 'nodo1'

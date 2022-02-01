@@ -90,10 +90,8 @@ Podemos ver la característica de nuestros recursos DRBD:
         ns:530108 nr:0 dw:5872 dr:526461 al:14 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:f oos:0
 
 Y finalmente podemos formatear el dispositivo de bloque, montarlo y crear un fichero `index.html` en el (todo esto se ejecuta en el nodo primario, en el nodo1):
-
-    # apt install xfsprogs
-  
-    # mkfs.xfs /dev/drbd1
+      
+    # mkfs.ext4 /dev/drbd1
   
     # mount /dev/drbd1 /mnt
     # cd /mnt/
@@ -114,7 +112,7 @@ El primer recurso creado es para que el cluster controle el recurso drbd, el clu
 El segundo recurso que vamos a crear corresponde al punto de montaje del dsipositivo DRBD, con esto conseguimos que el cluster sea responsable de montar en `/var/www/html` en el nodo principal el dispositivo drbd. Además vamos a crear todas las restricciones necesarias para para que estos recursos se asignen en el nodo principal y en el orden adecuado:
 
     pcs cluster cib fs_cfg
-    pcs -f fs_cfg resource create WebFS Filesystem device="/dev/drbd1" directory="/var/www/html" fstype="xfs"
+    pcs -f fs_cfg resource create WebFS Filesystem device="/dev/drbd1" directory="/var/www/html" fstype="ext4"
     pcs -f fs_cfg constraint colocation add WebFS with WebData-clone INFINITY with-rsc-role=Master
     pcs -f fs_cfg constraint order promote WebData-clone then start WebFS
     pcs -f fs_cfg constraint colocation add WebSite with WebFS INFINITY
