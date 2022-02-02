@@ -68,9 +68,9 @@ Y formateamos el dispositivo de bloque:
 Y creamos el fichero `index.html`:
 
     mount /dev/drbd1 /mnt
-    # cd /mnt/
-    # echo "<h1>Prueba con OCFS2</h1>" >> index.html
-    # umount /mnt
+    cd /mnt/
+    echo "<h1>Prueba con OCFS2</h1>" >> index.html
+    umount /mnt
 
 ## Reconfigurar el cluster para OCFS2
 
@@ -136,4 +136,43 @@ Poner balanceo de carga DNS
 Poner balanceador de carga en HA
 
 HAProxy
+
+--------------------------
+
+apt install gfs2-utils dlm-controld
+
+ 
+
+    pcs cluster cib dlm_cfg
+    pcs -f dlm_cfg resource create dlm ocf:pacemaker:controld op monitor interval=60s
+    pcs -f dlm_cfg resource clone dlm clone-max=2 clone-node-max=1
+    pcs cluster cib-push dlm_cfg --config
+
+
+
+
+mkfs.gfs2 -p lock_dlm -j 2 -t mycluster:web /dev/drbd1
+
+
+
+mount /dev/drbd1 /mnt
+    cd /mnt/
+    echo "<h1>Prueba con OCFS2</h1>" >> index.html
+    umount /mnt
+
+
+pcs cluster cib drbd_cfg
+pcs -f drbd_cfg resource create WebData ocf:linbit:drbd drbd_resource=wwwdata op monitor interval=60s
+pcs -f drbd_cfg resource promotable WebData promoted-max=1 promoted-node-max=1 clone-max=2  clone-node-max=1 notify=true
+pcs cluster cib-push drbd_cfg --config
+
+
+pcs cluster cib fs_cfg
+pcs -f fs_cfg resource create WebFS Filesystem device="/dev/drbd1" directory="/var/www/html" fstype="gfs2"
+pcs -f fs_cfg constraint colocation add WebFS with WebData-clone INFINITY with-rsc-role=Master
+pcs -f fs_cfg constraint order promote WebData-clone then start WebFS
+pcs -f fs_cfg constraint colocation add WebSite with WebFS INFINITY
+pcs -f fs_cfg constraint order WebFS then WebSite
+pcs cluster cib-push fs_cfg --config
+
 
