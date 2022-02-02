@@ -36,3 +36,4 @@ Para poder desplegar los diferentes clústeres, basta con acceder a cada directo
 * [HA con pacemaker y corosync. IP Failover](03-HA-IPFailover)
 * [HA con pacemaker y corosync. IP Failover + Apache2](04-HA-IPFailover-Apache2)
 * [HA con pacemaker y corosync. IP Failover + Apache2 + DRBD](05-HA-IPFailover-Apache2+DRBD)
+* [HA con pacemaker y corosync. IP Failover + Apache2 + RDBD + GFS2 (Activo-Activo)](06-HA-IPFailover-Apache2+DRBD+GFS2)
