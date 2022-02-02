@@ -5,7 +5,8 @@
 
 - name: Copy config drbd
   copy: src=files/etc/drbd.d/wwwdata.res dest=/etc/drbd.d/wwwdata.res owner=root group=root mode=0644
-  
+  register: drbd1_config
+
 - name: Checking DRBD Mirror Devices Creation Status
   stat:
     path: "/etc/drbd.d/.drbd1.created"
@@ -39,39 +40,3 @@
   until: ('Inconsistent' not in _drbd_sync['stdout'])
   retries: 100
   delay: 30
-
-
-- name: Create a ext4 filesystem on /dev/drbd1
-  community.general.filesystem:
-    fstype: ext4
-    dev: /dev/drbd1
-  when: ansible_hostname == 'nodo1'
-
-- name: Mount /dev/drbd1
-  ansible.posix.mount:
-    path: /mnt
-    src: /dev/drbd1
-    fstype: ext4
-    state: mounted
-  when: ansible_hostname == 'nodo1'
-
-- name: Copy index.html
-  copy: src=files/index.html dest=/mnt/index.html owner=www-data group=www-data mode=0644
-  when: ansible_hostname == 'nodo1'
-
-- name: Unmount /dev/drbd1
-  ansible.posix.mount:
-    path: /mnt
-    state: unmounted
-  when: ansible_hostname == 'nodo1'
-
-#- name: Copy script update_cluster.sh
-#  copy: >
-#    src=update_cluster.sh
-#    dest=/root/update_cluster.sh
-#    mode=644
-#    owner=root
-#    group=root
-#- name: Update the cluster
-#  command: sh /root/update_cluster.sh
-#  when: ansible_hostname == 'nodo1'
