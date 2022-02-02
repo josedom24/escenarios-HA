@@ -2,20 +2,22 @@
 
 Partiendo del ejercicio de IP Failover + Apache2 + DRBD,  vamos a agregar un sistema de almacenamiento distribuido [GFS2](https://es.wikipedia.org/wiki/Global_File_System_(Red_Hat)), por lo que podremos configurar nuestros sistema DRBD como *Dual-primary*, y la IP *ClusterIP* podrá estar asignado a cualquiera de los nodos, ya que los nodos podrán escribir o leer al mismo tiempo.
 
+En definitiva, vamos a convertir nuestro cluster en **activo-activo**.
+
 ## Instalación de GFS2
 
 En este apartado vamos a configurar OCFS2 como sistema de almacenamiento distribuido para conseguir el cluster de alta disponibilidad activo-activo.
 
 Además vamos a instalar el programa DLM (*Distributed Lock Manager*) que será el encargado de gestionar el acceso del cluster al almacenamiento distribuido.
 
-Ejecutamos:
+Ejecutamos en los dos nodos:
 
     apt install gfs2-utils dlm-controld
 
  
 ## Configuración de DLM en nuestro cluster de alta disponibilidad
 
-El DLM se tiene que ejecutar en los dos nodos, vamos a crear un recurso **ocf:pacemaker:controld** y lo vamos a clonar:
+El DLM se tiene que ejecutar en los dos nodos, vamos a crear un recurso **ocf:pacemaker:controld** y lo vamos a clonar. Ejecutamos en el nodo1:
 
     pcs cluster cib dlm_cfg
     pcs -f dlm_cfg resource create dlm ocf:pacemaker:controld op monitor interval=60s
@@ -57,19 +59,19 @@ Vemos como el recurso *WebFs* y *WebSite* se han detenido:
       * Clone Set: dlm-clone [dlm]:
         * Started: [ nodo1 nodo2 ]
 
-Tenemos que poner el nodo secundario de DRBD como primario, por lo tanto en el nodo2 ejecutamos:
-
-    drbdadm primary --force wwwdata
-
-Y formateamos el dispositivo de bloque:
+Y formateamos el dispositivo de bloque (en el nodo1):
 
     mkfs.gfs2 -p lock_dlm -j 2 -t mycluster:web /dev/drbd1
 
-Y creamos el fichero `index.html`:
+* `-p lock_dlm`: Indica que vamos a usar el programa DLM (*Distributed Lock Manager*) para gestionar los cambiso del sistema de archivo.
+* `-j 2`: Se va a reservar espacio para 2 journals (registro donde se almacena información necesaria para recuperar los datos afectados por una transición en caso de que falle) uno para cada nodo.
+* `-t mycluster:web`: El nombre de la tabla de bloqueo (lock) (`web`) en el cluster `mycluster` (nombre del cluster que indicamos al crearlo con corosync y que lo podemos encontrar en `/etc/corosync/corosync.conf`).
+
+A continuación podemos guardar información en el dispositivo de bloques. Creamos el fichero `index.html`:
 
     mount /dev/drbd1 /mnt
     cd /mnt/
-    echo "<h1>Prueba con OCFS2</h1>" >> index.html
+    echo "<h1>Prueba con GFS2</h1>" >> index.html
     umount /mnt
 
 ## Reconfigurar el cluster para OCFS2
@@ -78,22 +80,22 @@ Tenemos que cambiar el tipo de sistema de archivo en el recurso *WebFS*:
 
     pcs resource update WebFS fstype=gfs2
 
-GFS2 requiere que DLM este corriendo, por lo que ponemos una restricción:
+GFS2 requiere que DLM este corriendo, por lo que ponemos dos restricciones:
 
     pcs constraint colocation add WebFS with dlm-clone INFINITY
     pcs constraint order dlm-clone then WebFS
 
-Por último tenemos que montar el recurso del sistema de archivo *WebFS* en los dos nodos:
+Por último tenemos que montar el recurso del sistema de archivo *WebFS* en los dos nodos y modificar el recurso *WebData-clone** para indicar que ambos nos se pongan como primarios en el DRBD.
 
     pcs cluster cib active_cfg
     pcs -f active_cfg resource clone WebFS
     pcs -f active_cfg constraint
-    pcs -f active_cfg resource update WebData-clone master-max=2
+    pcs -f active_cfg resource update WebData-clone promoted-max=2
     pcs cluster cib-push active_cfg --config
     
     pcs resource enable WebFS
 
-Y comprobamos como el recurso *WebFS* está montado en los dos nodos:
+Y comprobamos como el recurso *WebFS* está montado en los dos nodos y que 
 
     pcs status
     ...
@@ -101,15 +103,23 @@ Y comprobamos como el recurso *WebFS* está montado en los dos nodos:
       * VirtualIP	(ocf::heartbeat:IPaddr2):	 Started nodo1
       * WebSite	(ocf::heartbeat:apache):	 Started nodo1
       * Clone Set: WebData-clone [WebData] (promotable):
-        * Masters: [ nodo1 ]
-        * Slaves: [ nodo2 ]
+        * Masters: [ nodo1 nodo2 ]
       * Clone Set: dlm-clone [dlm]:
         * Started: [ nodo1 nodo2 ]
       * Clone Set: WebFS-clone [WebFS]:
-        * Started: [ nodo1 ]
-        * Stopped: [ nodo2 ]
+        * Started: [ nodo1 nodo2 ]
+
     ...
 
+En este momento tenemos el DRBD como dual-primary y el sistema de ficheros GFS2 montado en lso dos nodoos. Cualquiera de los servidores web pueden escribir ficheros en `/var/www/html`, por lo que podemos clonar el recurso *WebSite* y quitar la restricción de colocación que hacía que el servidor web se activa en el nodo que tenía asignada la *VirtualIP*. Para ello:
+
+    pcs cluster cib active_cfg
+    pcs -f active_cfg resource clone WebSite
+    pcs cluster cib-push active_cfg --config
+
+    pcs constraint colocation delete WebSite-clone VirtualIP
+
+Ahora la *VirtualIP* puede estar asignada a cualquier nodo y el cluster funcionaría de forma correcta. Por lo que si un nodo falla, la *VirtualIP* se asignará al otro y el cluster seguirá funcionando.
 
 
 ## Prueba de funcionamiento
@@ -120,59 +130,12 @@ Y comprobamos como el recurso *WebFS* está montado en los dos nodos:
         $ dig @10.1.1.103 www.example.com
 
 * Comprueba que la dirección `www.example.com` está asociada a la dirección IP `10.1.1.100`, que en este escenario es la IP virtual que estará asociada en todo momento al nodo que esté en modo maestro.
-* Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que los recursos `IPCluster`, `WebSite`, `WebData` y `WebFS` están funcionando correctamente en uno de ellos. En esta configuración se ha forzado que todos los recursos se ejecuten siempre en un solo nodo, que será el maestro de todos los recursos.
-* Utiliza el navegador y accede a la dirección `www.example.com`. Recarga la página y comprueba que siempre responde el mismo nodo (nodo maestro).
-* Apaga el nodo maestro y comprueba que los recursos pasan al otro nodo2 y que la página sigue funcionando.
+* Accede a uno de los nodos del clúster y ejecuta la instrucción `pcs status`. Comprueba que los dos nodos están operativos y que los recursos están asignados a los dos nodos (excepto el *VirtualIP*)
+* Utiliza el navegador y accede a la dirección `www.example.com`. Recarga la página y comprueba que siempre responde el nodo que tiene asignada la *VirtualIP*.
+* Puedes mover el recurso *VirtualIP* al ootro nodo y comprobar que sigue funcionando: `pcs resource move VirtualIP nodo2`.
+* Apaga el nodo que tiene asignada la *VirtualIP* y comprueba que se asigna al otro nodo y sigue funcionando el cluster.
 
+## Balanceo de carga
 
-Mover recurso:
-
-pcs resource move VirtualIP nodo2
-pcs resource move WebSite nodo2
-
-
-Poner balanceo de carga DNS
-
-Poner balanceador de carga en HA
-
-HAProxy
-
---------------------------
-
-apt install gfs2-utils dlm-controld
-
- 
-
-    pcs cluster cib dlm_cfg
-    pcs -f dlm_cfg resource create dlm ocf:pacemaker:controld op monitor interval=60s
-    pcs -f dlm_cfg resource clone dlm clone-max=2 clone-node-max=1
-    pcs cluster cib-push dlm_cfg --config
-
-
-
-
-mkfs.gfs2 -p lock_dlm -j 2 -t mycluster:web /dev/drbd1
-
-
-
-mount /dev/drbd1 /mnt
-    cd /mnt/
-    echo "<h1>Prueba con OCFS2</h1>" >> index.html
-    umount /mnt
-
-
-pcs cluster cib drbd_cfg
-pcs -f drbd_cfg resource create WebData ocf:linbit:drbd drbd_resource=wwwdata op monitor interval=60s
-pcs -f drbd_cfg resource promotable WebData promoted-max=1 promoted-node-max=1 clone-max=2  clone-node-max=1 notify=true
-pcs cluster cib-push drbd_cfg --config
-
-
-pcs cluster cib fs_cfg
-pcs -f fs_cfg resource create WebFS Filesystem device="/dev/drbd1" directory="/var/www/html" fstype="gfs2"
-pcs -f fs_cfg constraint colocation add WebFS with WebData-clone INFINITY with-rsc-role=Master
-pcs -f fs_cfg constraint order promote WebData-clone then start WebFS
-pcs -f fs_cfg constraint colocation add WebSite with WebFS INFINITY
-pcs -f fs_cfg constraint order WebFS then WebSite
-pcs cluster cib-push fs_cfg --config
-
-
+* Balanceo por DNS: Podríamos quitar el recurso *VirtualIP* y hacer un balanceo de carga por DNS como vimos en el escenario 1 y el 2.
+* Añadir un balanceador de carga HAProxy (que balancee la carga entre los dos servidores web) y configurar un recurso del cluster para que los controle. Para ello habría que crear un recurso con pacemaker para controlar los balanceadores de carga, y se podría configurar como activo-pasivo o activo-activo.

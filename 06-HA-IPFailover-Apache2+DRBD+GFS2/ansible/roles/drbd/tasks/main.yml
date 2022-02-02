@@ -40,3 +40,33 @@
   until: ('Inconsistent' not in _drbd_sync['stdout'])
   retries: 100
   delay: 30
+
+- name: Create a ext4 filesystem on /dev/drbd1
+  command: mkfs.ext4 /dev/drbd1
+  when: _drbd_mirror_device_up['changed'] and 
+        ansible_hostname == 'nodo1'
+
+- name: Mount /dev/drbd1
+  command: mount /dev/drbd1 /mnt
+  when: _drbd_mirror_device_up['changed'] and 
+        ansible_hostname == 'nodo1'
+
+- name: Create index.html
+  command: echo "<h1>Prueba con DRBD</h1>" >> /mnt/index.html
+  when: _drbd_mirror_device_up['changed'] and 
+        ansible_hostname == 'nodo1'
+- name: Unmount /dev/drbd1
+  command: umount /mnt
+  when: _drbd_mirror_device_up['changed'] and 
+        ansible_hostname == 'nodo1'
+
+- name: Copy script update_cluster.sh
+  copy: >
+    src=update_cluster.sh
+    dest=/root/update_cluster.sh
+    mode=644
+    owner=root
+    group=root
+- name: Update the cluster
+  command: sh /root/update_cluster.sh
+  when: ansible_hostname == 'nodo1'
