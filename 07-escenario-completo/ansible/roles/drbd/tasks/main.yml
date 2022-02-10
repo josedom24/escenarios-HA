@@ -59,6 +59,11 @@
   copy: src=files/index.php dest=/mnt/index.php owner=www-data group=www-data mode=0644
   when: ansible_hostname == 'nodo1'
 
+- name: Unmount /dev/drbd1
+  command: umount /mnt
+  when: _drbd_mirror_device_up['changed'] and 
+        ansible_hostname == 'nodo1'
+
 - name: Copy script update_cluster.sh
   copy: >
     src=update_cluster.sh

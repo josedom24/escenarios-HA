@@ -1,0 +1,9 @@
+zone "example.com" {
+     type master ;
+file "db.example.com";
+};
+
+zone "1.1.10.in-addr.arpa" {
+     type master ;
+file "db.10.1.1";
+};
