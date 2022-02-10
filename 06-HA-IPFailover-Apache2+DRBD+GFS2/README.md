@@ -6,7 +6,7 @@ En definitiva, vamos a convertir nuestro cluster en **activo-activo**.
 
 ## Instalación de GFS2
 
-En este apartado vamos a configurar OCFS2 como sistema de almacenamiento distribuido para conseguir el cluster de alta disponibilidad activo-activo.
+En este apartado vamos a configurar GFS2 como sistema de almacenamiento distribuido para conseguir el cluster de alta disponibilidad activo-activo.
 
 Además vamos a instalar el programa DLM (*Distributed Lock Manager*) que será el encargado de gestionar el acceso del cluster al almacenamiento distribuido.
 
@@ -74,7 +74,7 @@ A continuación podemos guardar información en el dispositivo de bloques. Cream
     echo "<h1>Prueba con GFS2</h1>" >> index.html
     umount /mnt
 
-## Reconfigurar el cluster para OCFS2
+## Reconfigurar el cluster para GFS2
 
 Tenemos que cambiar el tipo de sistema de archivo en el recurso *WebFS*:
 
