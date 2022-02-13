@@ -54,11 +54,11 @@ Y podemos ver que tenemos que indicar al menos dos parámetros obligatoriamente:
 
 * `hostlist`: Una lista que relaciona los hostnames de los nodos del cluster con el nombre de la máquina virtual en el hypervisor. En nuestro caso el valor sería:
 
-    hostlist="nodo1:06-HA-IPFailover-Apache2DRBDGFS2_nodo1,nodo2:06-HA-IPFailover-Apache2DRBDGFS2_nodo2"
+      hostlist="nodo1:06-HA-IPFailover-Apache2DRBDGFS2_nodo1,nodo2:06-HA-IPFailover-Apache2DRBDGFS2_nodo2"
   
 * `hypervisor_uri`: La uri del sistema de virtualización KVM. en nuestro caso:
 
-    qemu+ssh://192.168.121.1/system
+      qemu+ssh://192.168.121.1/system
 
 Con esos datos habilitamos el fencing en el cluster ejecutando:
 
