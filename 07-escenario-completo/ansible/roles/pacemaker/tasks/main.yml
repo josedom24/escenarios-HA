@@ -1,8 +1,9 @@
-- name: install pacemaker, pcs
+- name: install pacemaker, pcs, virsh
   apt: 
     pkg:
     - pacemaker
     - pcs
+    - libvirt-clients
 
 - name: Change password to user hacluster
   user:
@@ -28,4 +29,47 @@
 
 - name: Create the cluster
   command: sh /root/init_cluster.sh
+  when: ansible_hostname == 'nodo1'
+
+- name: Create directory /root/.ssh
+  ansible.builtin.file:
+    path: /root/.ssh
+    state: directory
+    mode: '0755'
+
+- name: Generate key rsa
+  community.crypto.openssh_keypair:
+      path: /root/.ssh/id_rsa
+
+- name: Copy ssh config
+  copy: >
+    src=ssh/config
+    dest=/root/.ssh/config
+    mode=644
+    owner=root
+    group=root
+
+- name: Display public keys
+  command: cat /root/.ssh/id_rsa.pub
+  register: command_output
+
+- name: Public keys
+  debug:
+    msg="{{command_output.stdout}}"
+
+- name: Pausa
+  pause:
+    prompt: "Copia las claves públicas de los dos nodos en /root/.ssh/authorizad_keys del host."
+
+
+- name: Copy script init_stonith.sh
+  copy: >
+    src=init_stonith.sh
+    dest=/root/init_stonith.sh
+    mode=644
+    owner=root
+    group=root
+
+- name: Configurating stonith
+  command: sh /root/init_stonith.sh
   when: ansible_hostname == 'nodo1'
