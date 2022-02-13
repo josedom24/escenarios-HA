@@ -56,7 +56,7 @@ Y podemos ver que tenemos que indicar al menos dos parámetros obligatoriamente:
 
       hostlist="nodo1:06-HA-IPFailover-Apache2DRBDGFS2_nodo1,nodo2:06-HA-IPFailover-Apache2DRBDGFS2_nodo2"
   
-* `hypervisor_uri`: La uri del sistema de virtualización KVM. en nuestro caso:
+* `hypervisor_uri`: La uri del sistema de virtualización KVM. En nuestro caso:
 
       qemu+ssh://192.168.121.1/system
 
