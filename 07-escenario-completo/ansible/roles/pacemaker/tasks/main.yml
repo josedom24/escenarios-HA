@@ -36,10 +36,12 @@
     path: /root/.ssh
     state: directory
     mode: '0755'
+  register: _create_ssh_key
 
 - name: Generate key rsa
   community.crypto.openssh_keypair:
       path: /root/.ssh/id_rsa
+  when: _create_ssh_key['changed']
 
 - name: Copy ssh config
   copy: >
@@ -56,11 +58,12 @@
 - name: Public keys
   debug:
     msg="{{command_output.stdout}}"
+  when: _create_ssh_key['changed']
 
 - name: Pausa
   pause:
     prompt: "Copia las claves públicas de los dos nodos en /root/.ssh/authorizad_keys del host."
-
+  when: _create_ssh_key['changed']
 
 - name: Copy script init_stonith.sh
   copy: >

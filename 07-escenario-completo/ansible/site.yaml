@@ -17,12 +17,12 @@
   roles:
    - role: pacemaker
 
-#- hosts: nodos
-#  become: true
-#  roles:
-#   - role: drbd
-#
-#- hosts: nodos
-#  become: true
-#  roles:
-#   - role: gfs2
+- hosts: nodos
+  become: true
+  roles:
+   - role: drbd
+
+- hosts: nodos
+  become: true
+  roles:
+   - role: gfs2

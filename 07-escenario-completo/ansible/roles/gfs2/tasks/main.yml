@@ -4,61 +4,61 @@
     - gfs2-utils 
     - dlm-controld
 
-#- name: Copy script update_cluster_dlm.sh
-#  copy: >
-#    src=update_cluster_dlm.sh
-#    dest=/root/update_cluster_dlm.sh
-#    mode=644
-#    owner=root
-#    group=root
-#- name: Update the cluster dlm
-#  command: sh /root/update_cluster_dlm.sh
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: Disable WebFS
-#  command: pcs resource disable WebFS
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: Create a gfs2 filesystem on /dev/drbd1
-#  command: mkfs.gfs2 -p lock_dlm -j 2 -t mycluster:web /dev/drbd1
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: Mount /dev/drbd1
-#  command: mount /dev/drbd1 /mnt
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: Copy index.html
-#  copy: src=files/index.html dest=/mnt/index.html owner=www-data group=www-data mode=0644
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: Copy index.php
-#  copy: src=files/index.php dest=/mnt/index.php owner=www-data group=www-data mode=0644
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: Unmount /dev/drbd1
-#  command: umount /mnt
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: Change type filesystem WebFS
-#  command: pcs resource update WebFS fstype=gfs2
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: create constrint WebFS dlm-clone 1
-#  command: pcs constraint colocation add WebFS with dlm-clone INFINITY 
-#  when: ansible_hostname == 'nodo1'
-#
-#- name: create constrint WebFS dlm-clone 2
-#  command: pcs constraint order dlm-clone then WebFS
-#  when: ansible_hostname == 'nodo1'
-#
-#
-#- name: Copy script update_cluster.sh
-#  copy: >
-#    src=update_cluster.sh
-#    dest=/root/update_cluster.sh
-#    mode=644
-#    owner=root
-#    group=root
-#- name: Update the cluster
-#  command: sh /root/update_cluster.sh
-#  when: ansible_hostname == 'nodo1'
+- name: Copy script update_cluster_dlm.sh
+  copy: >
+    src=update_cluster_dlm.sh
+    dest=/root/update_cluster_dlm.sh
+    mode=644
+    owner=root
+    group=root
+- name: Update the cluster dlm
+  command: sh /root/update_cluster_dlm.sh
+  when: ansible_hostname == 'nodo1'
+
+- name: Disable WebFS
+  command: pcs resource disable WebFS
+  when: ansible_hostname == 'nodo1'
+
+- name: Create a gfs2 filesystem on /dev/drbd1
+  command: mkfs.gfs2 -p lock_dlm -j 2 -t mycluster:web /dev/drbd1
+  when: ansible_hostname == 'nodo1'
+
+- name: Mount /dev/drbd1
+  command: mount /dev/drbd1 /mnt
+  when: ansible_hostname == 'nodo1'
+
+- name: Copy index.html
+  copy: src=files/index.html dest=/mnt/index.html owner=www-data group=www-data mode=0644
+  when: ansible_hostname == 'nodo1'
+
+- name: Copy index.php
+  copy: src=files/index.php dest=/mnt/index.php owner=www-data group=www-data mode=0644
+  when: ansible_hostname == 'nodo1'
+
+- name: Unmount /dev/drbd1
+  command: umount /mnt
+  when: ansible_hostname == 'nodo1'
+
+- name: Change type filesystem WebFS
+  command: pcs resource update WebFS fstype=gfs2
+  when: ansible_hostname == 'nodo1'
+
+- name: create constrint WebFS dlm-clone 1
+  command: pcs constraint colocation add WebFS with dlm-clone INFINITY 
+  when: ansible_hostname == 'nodo1'
+
+- name: create constrint WebFS dlm-clone 2
+  command: pcs constraint order dlm-clone then WebFS
+  when: ansible_hostname == 'nodo1'
+
+
+- name: Copy script update_cluster.sh
+  copy: >
+    src=update_cluster.sh
+    dest=/root/update_cluster.sh
+    mode=644
+    owner=root
+    group=root
+- name: Update the cluster
+  command: sh /root/update_cluster.sh
+  when: ansible_hostname == 'nodo1'
