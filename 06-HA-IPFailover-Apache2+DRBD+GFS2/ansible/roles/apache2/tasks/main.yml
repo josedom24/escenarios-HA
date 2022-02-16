@@ -1,7 +1,9 @@
-- name: install apache2
+- name: install apache2 y php
   apt: 
     pkg:
     - apache2
+    - libapache2-mod-php
+    - php-mysql
 
 - name: Copy index.html
   template: src=templates/index.j2 dest=/var/www/html/index.html owner=www-data group=www-data mode=0644
