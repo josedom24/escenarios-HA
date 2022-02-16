@@ -1,22 +1,6 @@
 # Balanceo por DNS
 
-Utilizando entradas tipo A duplicadas en un servidor DNS es posible realizar de forma muy sencilla un balanceo de carga entre varios equipos, esto se conoce como [DNS round robin](http://en.wikipedia.org/wiki/Round-robin_DNS).
-
-En este caso vamos a realizar un balanceo de carga entre dos servidores web, para lo que creamos un escenario con tres equipos:
-
-* `nodo1`: `10.1.1.101` <- Servidor web
-* `nodo2`: `10.1.1.102` <- Servidor web
-* `dns`: `10.1.1.103` <- Servidor DNS
-
-## Levantar el escenario
-
-Simplemente ejecutamos la instrucción:
-
-    $ vagrant up
-    $ cd ansible
-    $ ansible-playbook site.yaml
-
-Que levanta y configura la red en los tres nodos y configurar el escenario.
+* [Balanceo de carga por DNS](https://www.josedomingo.org/pledin/2022/02/dns-balanceo-carga/)
 
 ## Prueba de funcionamiento
 
