@@ -48,8 +48,7 @@
 
 - name: Mount /dev/drbd1
   command: mount /dev/drbd1 /mnt
-  when: _drbd_mirror_device_up['changed'] and 
-        ansible_hostname == 'nodo1'
+  when: ansible_hostname == 'nodo1'
 
 - name: Copy index.html
   copy: src=files/index.html dest=/mnt/index.html owner=www-data group=www-data mode=0644
@@ -61,8 +60,7 @@
 
 - name: Unmount /dev/drbd1
   command: umount /mnt
-  when: _drbd_mirror_device_up['changed'] and 
-        ansible_hostname == 'nodo1'
+  when: ansible_hostname == 'nodo1'
 
 - name: Copy script update_cluster.sh
   copy: >
