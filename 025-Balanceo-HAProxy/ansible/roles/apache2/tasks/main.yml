@@ -1,0 +1,14 @@
+- name: install apache2
+  apt: 
+    pkg:
+    - apache2
+
+- name: Copy index.html
+  template: src=templates/index.j2 dest=/var/www/html/index.html owner=www-data group=www-data mode=0644
+  notify:
+  - restart apache2
+
+- name: Copy info.txt
+  template: src=templates/info.j2 dest=/var/www/html/info.txt owner=www-data group=www-data mode=0644
+  notify:
+  - restart apache2

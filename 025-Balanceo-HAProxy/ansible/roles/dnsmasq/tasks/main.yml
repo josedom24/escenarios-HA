@@ -1,0 +1,15 @@
+- name: ensure dnsmasq is installed
+  apt:
+    pkg:
+      - dnsmasq
+    state: latest
+- name: Configurating dnsmasq
+  template: >
+    src=etc/dnsmasq.conf
+    dest=/etc/dnsmasq.conf
+    owner=root
+    group=root
+    mode=0644
+  notify:
+     - restart dnsmasq-server
+
