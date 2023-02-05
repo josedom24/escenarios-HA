@@ -33,7 +33,8 @@ Para poder desplegar los diferentes clústeres, basta con acceder a cada directo
 
 * [Balanceo por DNS](01-Balanceo-DNS)
 * [Balanceo por DNS Delegado](02-Balanceo-DNS-Nombres-Virtuales)
-* [HA con pacemaker y corosync. IP Failover](03-HA-IPFailover)
-* [HA con pacemaker y corosync. IP Failover + Apache2](04-HA-IPFailover-Apache2)
-* [HA con pacemaker y corosync. IP Failover + Apache2 + DRBD](05-HA-IPFailover-Apache2+DRBD)
-* [HA con pacemaker y corosync. IP Failover + Apache2 + RDBD + GFS2 (Activo-Activo)](06-HA-IPFailover-Apache2+DRBD+GFS2)
+* [Balanceo con HAProxy](03-Balanceo-HAProxy)
+* [HA con pacemaker y corosync. IP Failover](04-HA-IPFailover)
+* [HA con pacemaker y corosync. IP Failover + Apache2](05-HA-IPFailover-Apache2)
+* [HA con pacemaker y corosync. IP Failover + Apache2 + DRBD](06-HA-IPFailover-Apache2+DRBD)
+* [HA con pacemaker y corosync. IP Failover + Apache2 + RDBD + GFS2 (Activo-Activo)](07-HA-IPFailover-Apache2+DRBD+GFS2)
