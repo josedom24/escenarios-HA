@@ -2,15 +2,15 @@
 
 Partiendo del ejercicio de IP Failover + Apache2 + DRBD,  vamos a agregar un sistema de almacenamiento distribuido [GFS2](https://es.wikipedia.org/wiki/Global_File_System_(Red_Hat)), por lo que podremos configurar nuestros sistema DRBD como *Dual-primary*, y la IP *ClusterIP* podrá estar asignado a cualquiera de los nodos, ya que los nodos podrán escribir o leer al mismo tiempo.
 
-En definitiva, vamos a convertir nuestro cluster en **activo-activo**.
+En definitiva, vamos a convertir nuestro clúster en **activo-activo**.
 
-No vamos a activar el STONITH, pero siguieres aprender un poco mas sobre el fencing, puedes leer [Fencing y STONITH (Shoot The Other Node In The Head)](fencing.md).
+No vamos a activar el STONITH, pero si quieres aprender un poco más sobre el fencing, puedes leer [Fencing y STONITH (Shoot The Other Node In The Head)](fencing.md).
 
 ## Instalación de GFS2
 
 En este apartado vamos a configurar GFS2 como sistema de almacenamiento distribuido para conseguir el cluster de alta disponibilidad activo-activo.
 
-Además vamos a instalar el programa DLM (*Distributed Lock Manager*) que será el encargado de gestionar el acceso del cluster al almacenamiento distribuido.
+Además vamos a instalar el programa DLM (*Distributed Lock Manager*) que será el encargado de gestionar el acceso del clúster al almacenamiento distribuido.
 
 Ejecutamos en los dos nodos:
 
@@ -113,7 +113,7 @@ Y comprobamos como el recurso *WebFS* está montado en los dos nodos y que
 
     ...
 
-En este momento tenemos el DRBD como dual-primary y el sistema de ficheros GFS2 montado en lso dos nodoos. Cualquiera de los servidores web pueden escribir ficheros en `/var/www/html`, por lo que podemos clonar el recurso *WebSite* y quitar la restricción de colocación que hacía que el servidor web se activa en el nodo que tenía asignada la *VirtualIP*. Para ello:
+En este momento tenemos el DRBD como dual-primary y el sistema de ficheros GFS2 montado en los dos nodos. Cualquiera de los servidores web pueden escribir ficheros en `/var/www/html`, por lo que podemos clonar el recurso *WebSite* y quitar la restricción de colocación que hacía que el servidor web se activa en el nodo que tenía asignada la *VirtualIP*. Para ello:
 
     pcs cluster cib active_cfg
     pcs -f active_cfg resource clone WebSite
@@ -121,13 +121,13 @@ En este momento tenemos el DRBD como dual-primary y el sistema de ficheros GFS2 
 
     pcs constraint colocation delete WebSite-clone VirtualIP
 
-Ahora la *VirtualIP* puede estar asignada a cualquier nodo y el cluster funcionaría de forma correcta. Por lo que si un nodo falla, la *VirtualIP* se asignará al otro y el cluster seguirá funcionando.
+Ahora la *VirtualIP* puede estar asignada a cualquier nodo y el clúster funcionaría de forma correcta. Por lo que si un nodo falla, la *VirtualIP* se asignará al otro y el clúster seguirá funcionando.
 
 
 ## Prueba de funcionamiento
 
 * Edita el fichero `/etc/resolv.conf` de tu equipo y añade como servidor DNS primario el nodo "dns" que tiene la dirección IP `10.1.1.103`
-* Comprueba la conectividad con los nodos del cluster con `ping`. Utiliza `dig` para resolver el nombre `www.example.com`:
+* Comprueba la conectividad con los nodos del clúster con `ping`. Utiliza `dig` para resolver el nombre `www.example.com`:
 
         $ dig @10.1.1.103 www.example.com
 
