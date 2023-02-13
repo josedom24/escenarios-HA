@@ -11,7 +11,6 @@ $ORIGIN example.com.
 nodo1	    IN	A	10.1.1.101
 nodo2   	IN	A	10.1.1.102
 dns		    IN  A	10.1.1.103
-lb			IN	A	10.1.1.104
 
-www         IN  CNAME   lb
+www         IN  CNAME   dns
 

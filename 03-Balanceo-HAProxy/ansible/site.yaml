@@ -13,7 +13,7 @@
    - role: apache2
    - role: dnsmasq
 
-- hosts: servidor_ha
+- hosts: servidor_dns
   become: true
   roles:
    - role: haproxy

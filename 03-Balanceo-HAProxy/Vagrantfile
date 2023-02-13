@@ -27,14 +27,5 @@ Vagrant.configure("2") do |config|
       dns.vm.provider :libvirt do |domain|
       end
     end
-    config.vm.define :lb do |lb|
-      lb.vm.box = "debian/bullseye64"
-      lb.vm.hostname = "loadbalancer"
-      lb.vm.synced_folder ".", "/vagrant", disabled: true
-      lb.vm.network :private_network, ip: "10.1.1.104"
-      lb.vm.provider :libvirt do |domain|
-      end
-    end
-
   end
   

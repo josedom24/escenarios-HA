@@ -18,14 +18,14 @@ Que levanta y configura la red en los tres nodos y configurar el escenario.
 
 ## Prueba de funcionamiento
 
-En este caso cuando accedemos a `www` estaremos accidiendo al nodo balanceador de carga, donde hemos instalado HAPorxy, podemos preguntar a nuestro servidor dns principal:
+En este caso cuando accedemos a `www` estaremos accediendo al nodo balanceador de carga (**hemos instalado el balanceador en la misma máquina que el dns**), donde hemos instalado HAPorxy, podemos preguntar a nuestro servidor dns principal:
 
     $ dig @10.1.1.103 www.example.com
 
 A continuación vamos a configurar el balanceador de carga HAProxy:
 
 ```
-vagrant ssh lb
+vagrant ssh dns
 ```
 
 Para ello añade la siguiente configuración en el fichero `/etc/haproxy/haproxy.cfg`:
@@ -61,7 +61,7 @@ Reiniciamos el servidor HAProxy y en nuestro ordenador añadimos la dirección I
 Podemos controlar nuestro balanceador de carga HAProxy accediiendo a las estadísticas y controlando a que nodos se está balanceado la carga utilizando la herramienta `hatop`:
 
 ```
-vagrant ssh lb
+vagrant ssh dns
 sudo apt install hatop
 ```
 
