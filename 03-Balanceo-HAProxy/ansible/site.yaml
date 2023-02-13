@@ -11,7 +11,6 @@
   become: true
   roles:
    - role: apache2
-   - role: dnsmasq
 
 - hosts: servidor_dns
   become: true
