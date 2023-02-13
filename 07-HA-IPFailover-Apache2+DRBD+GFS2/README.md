@@ -140,4 +140,4 @@ Ahora la *VirtualIP* puede estar asignada a cualquier nodo y el clúster funcion
 ## Balanceo de carga
 
 * Balanceo por DNS: Podríamos quitar el recurso *VirtualIP* y hacer un balanceo de carga por DNS como vimos en el escenario 1 y el 2.
-* Añadir un balanceador de carga HAProxy (que balancee la carga entre los dos servidores web) y configurar un recurso del cluster para que los controle. Para ello habría que crear un recurso con pacemaker para controlar los balanceadores de carga, y se podría configurar como activo-pasivo o activo-activo.
+* Añadir un balanceador de carga HAProxy en cada nodo (que balancee la carga entre los dos servidores web) y configurar un recurso del clúster para que los controle. Para ello habría que crear un recurso con pacemaker para controlar los balanceadores de carga, y se podría configurar como activo-pasivo o activo-activo.
